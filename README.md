@@ -1,4 +1,4 @@
-# weather-app-self
+# weather-app
 ## Description
 
 A weather application has been created by using weather data from https://openweathermap.org API.
