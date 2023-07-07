@@ -8,9 +8,10 @@ const apiKey = "bd8e3bbf55023bdcc67f450daf3c314a"
 let citiesListed = []
 
 
+
 const getWeatherData = () => {
     
-    document.querySelector("button").onclick = () => {
+    document.querySelector(".btn-danger").onclick = () => {
         
         const cityName = document.querySelector("input").value.toLowerCase()
 
@@ -23,15 +24,59 @@ const getWeatherData = () => {
             .then((data) => printToScreen(data))
 
             citiesListed.push(cityName)
+            
             document.querySelector(".warning").innerHTML = ""
+
+            
         }
 
         document.querySelector("input").value = ""
 
     }
+
 }
 
-getWeatherData()
+const getWeatherDatabyLocation = () => {
+    
+    document.getElementById("locate").onclick = () => {
+        
+        //const cityName = document.querySelector("input").value.toLowerCase()
+
+        navigator.geolocation?.getCurrentPosition(({ coords }) => {
+            const { latitude, longitude } = coords;
+            
+            fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}&lang=${lang}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if(citiesListed.includes(data.name)){
+                    console.log(citiesListed);
+                    console.log(data.name);
+                    document.querySelector(".warning").innerHTML = `${data.name.toUpperCase()} is already listed below ☺️. Enter another city!`
+                }
+                else{
+                    
+                    printToScreen(data)
+        
+                    citiesListed.push(data.name)
+                    document.querySelector(".warning").innerHTML = ""
+
+                
+                }
+            })
+        })
+    }
+    
+}
+
+getWeatherData();
+getWeatherDatabyLocation();
+
+
+
+
+    
+
+
 
 const printToScreen = (veri) => {
     
@@ -43,8 +88,10 @@ const printToScreen = (veri) => {
     
     <div class="col col-sm-6 col-md-4 col-lg-3 col-xl-2 g-4">
         <div class="card shadow-lg">
-          <div class="card-header fs-4">
-            ${veri.name} <sup class="bg-warning rounded px-1">${veri.sys.country}</sup>
+          <div class="card-header fs-4 d-flex justify-content-between align-middle">
+            
+            <p>${veri.name} <sup style = "font-size: 0.8rem" class="bg-warning rounded px-1">${veri.sys.country}</sup></p>
+            <section class="fs-6 text-danger single-clear-btn"><i class="fa-regular fa-circle-xmark p-1"></i></section>
           </div>
           <ul class="list-group list-group-flush text-center">
             <li class="list-group-item h1 display-3">${Math.trunc(veri.main.temp)}<sup class="fs-4 display-6">℃</sup></li>
@@ -52,50 +99,31 @@ const printToScreen = (veri) => {
             <li class="list-group-item">${veri.weather[0].description}</li>
           </ul>
         </div>
-      </div>
+    </div>
     
     `
+
+    const singleClearButtons = document.querySelectorAll("section.single-clear-btn")
+    singleClearButtons.forEach((item) => {
+        item.addEventListener('click', sil)
+    })
+    function sil(e){
+        
+        
+        citiesListed[citiesListed.indexOf(e.target.closest("div").childNodes[1].textContent.split(" ")[0].toLowerCase())] 
+          
+        console.log(citiesListed);
+        e.target.closest(".col").remove()
+    }
 }
 
 document.querySelector("input").addEventListener("keypress", function(event) {
   
     if (event.key === "Enter") {
       event.preventDefault();
-      document.querySelector("button").click();
+      document.querySelector(".btn-danger").click();
     }
 });
-
-
-//Local Storage
-
-/* function saveToLocalStorage(newCity){
-    let cities;
-
-    if(localStorage.getItem('cities') === null){
-        cities = []
-    }
-    else{
-        cities = JSON.parse(localStorage.getItem('cities'))
-    }
-
-    cities.push(newCity)
-    localStorage.setItem('cities', JSON.stringify(cities))
-}
-
-function ReadFromLocalStorage(){
-    let cities;
-
-    if(localStorage.getItem('cities') === null){
-        cities = []
-    }
-    else{
-        cities = JSON.parse(localStorage.getItem('cities'))
-    }
-
-    cities.forEach((city) => {
-        getWeatherData(city)
-    })
-} */
 
 
 
