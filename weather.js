@@ -1,7 +1,7 @@
 
 
 const units = "metric";
-const lang = "tr";
+const lang = "en";
 
 const apiKey = "bd8e3bbf55023bdcc67f450daf3c314a"
 
@@ -9,9 +9,9 @@ let citiesListed = []
 
 
 
-const getWeatherData = () => {
+const getWeatherData = async () => {
     
-    document.querySelector(".btn-danger").onclick = () => {
+    document.querySelector(".btn-danger").onclick = async () => {
         
         const cityName = document.querySelector("input").value.toLowerCase()
 
@@ -19,15 +19,37 @@ const getWeatherData = () => {
             document.querySelector(".warning").innerHTML = `${cityName.toUpperCase()} is already listed below ☺️. Enter another city!`
         }
         else{
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}&lang=${lang}`)
-            .then((res) => res.json())
-            .then((data) => printToScreen(data))
-
-            citiesListed.push(cityName)
             
-            document.querySelector(".warning").innerHTML = ""
+            try{
+                await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}&lang=${lang}`)
+                .then((res) => res.json())
+                .then((data) => printToScreen(data))
+    
+                citiesListed.push(cityName)
 
-            
+                const singleClearButtons = document.querySelectorAll("section.single-clear-btn")
+                singleClearButtons.forEach((item) => {
+                    item.addEventListener('click', sil)
+                })
+                function sil(e){
+        
+                    let index = citiesListed.indexOf(e.target.closest("div").childNodes[1].textContent.split(" ")[0].toLowerCase())
+                    console.log(e.target.closest("div").childNodes[1].textContent);
+                    console.log(index);
+                    citiesListed.splice(index, 1)
+                    //citiesListed[citiesListed.indexOf(e.target.closest("div").childNodes[1].textContent.split(" ")[0].toLowerCase())]
+         
+                    console.log(citiesListed);
+                    
+                    e.target.closest(".col").remove()
+                }
+                
+                document.querySelector(".warning").innerHTML = ""
+    
+                
+            }catch(err){
+                document.querySelector(".warning").innerHTML = `${cityName.toUpperCase()} can not be found ☺️. Enter a valid city name!`
+            }
         }
 
         document.querySelector("input").value = ""
@@ -56,11 +78,9 @@ const getWeatherDatabyLocation = () => {
                 else{
                     
                     printToScreen(data)
-        
                     citiesListed.push(data.name)
                     document.querySelector(".warning").innerHTML = ""
 
-                
                 }
             })
         })
@@ -103,18 +123,7 @@ const printToScreen = (veri) => {
     
     `
 
-    const singleClearButtons = document.querySelectorAll("section.single-clear-btn")
-    singleClearButtons.forEach((item) => {
-        item.addEventListener('click', sil)
-    })
-    function sil(e){
-        
-        
-        citiesListed[citiesListed.indexOf(e.target.closest("div").childNodes[1].textContent.split(" ")[0].toLowerCase())] 
-          
-        console.log(citiesListed);
-        e.target.closest(".col").remove()
-    }
+    
 }
 
 document.querySelector("input").addEventListener("keypress", function(event) {
