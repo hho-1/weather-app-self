@@ -1,0 +1,52 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    cursor: none;
+}
+.mouse{
+    z-index: 999;
+    position: fixed;
+    background: #2696e8;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 20px #2696e8, 0 0 60px #2696e8, 0 0 100px #2696e8;
+    animation: colors 5s infinite;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+@keyframes colors {
+    0%{
+        filter: hue-rotate(0deg)
+    }
+    100%{
+        filter: hue-rotate(360deg)
+    }
+}
+
+.mouse::before{
+    content: "";
+    position: absolute;
+    background: #2696e8;
+    width: 50px;
+    height: 50px;
+    opacity: 0.2;
+    transform: translate(-30%, -30%);
+    border-radius: 50%;
+}
+  
+  section.single-clear-btn{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.4s;
+  }
+  section.single-clear-btn:hover{
+    transform: scale(1.2);
+  }
+
