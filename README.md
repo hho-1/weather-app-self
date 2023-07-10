@@ -8,5 +8,6 @@ In this exercise, following topics have been covered:
 - Bootstrap CSS
 - JS DOM
 - JS Async and fetch
+- CSS Animations
 
   The weather app can be seen at https://hho-1.github.io/weather-app-self/
