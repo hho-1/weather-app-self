@@ -10,4 +10,5 @@ In this exercise, following topics have been covered:
 - JS Async and fetch
 - CSS Animations
 
-  The weather app can be seen at https://hho-1.github.io/weather-app-self/
+The weather app can be seen at https://hho-1.github.io/weather-from-Api-App/
+
